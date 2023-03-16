@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "awcodes/filament-quick-create": "^2.1",
         "chiiya/filament-access-control": "^1.7",
         "filament/filament": "^2.17",
         "guzzlehttp/guzzle": "^7.2",
