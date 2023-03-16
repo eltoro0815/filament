@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->softDeletes();
             $table->decimal('amount', 15, 2);
             $table->timestamps();
         });
