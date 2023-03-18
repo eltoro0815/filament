@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Team;
+use App\Models\User;
 use Chiiya\FilamentAccessControl\Enumerators\RoleName;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Illuminate\Database\Seeder;
@@ -15,14 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        $user = FilamentUser::firstOrCreate(
+        /**
+         * Admin User
+         */
+        $adminuser = FilamentUser::firstOrCreate(
             [
                 'first_name' => 'Thorsten',
                 'last_name' => 'Ruppenstein',
@@ -36,7 +35,34 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $user->assignRole(RoleName::SUPER_ADMIN);
-        $user->save();
+        $adminuser->assignRole(RoleName::SUPER_ADMIN);
+        $adminuser->save();
+
+        /**
+         * App User
+         */
+        $user = User::firstOrCreate(
+            [
+                'name' => 'Thorsten',
+                'email' => 'thorsten@ddev.site',
+            ],
+            [
+                'name' => 'Thorsten',
+                'email' => 'thorsten@ddev.site',
+                'password' => Hash::make('thorsten@ddev.site')
+            ]
+        );
+
+
+        /**
+         * Personal Team
+         */
+        $user->ownedTeams()->create(
+            [
+                'name' => 'Thorsten\'s Team',
+                'personal_team' => true,
+            ]
+
+        );
     }
 }
