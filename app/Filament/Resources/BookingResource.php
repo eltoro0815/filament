@@ -4,12 +4,15 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BookingResource\Pages;
 use App\Filament\Resources\BookingResource\RelationManagers;
+use App\Models\Account;
 use App\Models\Booking;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
@@ -30,7 +33,13 @@ class BookingResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('amount')->numeric()->required(),
+                Select::make('account_id')
+                    ->relationship('account', 'name')
+                    ->required()
+                    ->label('Konto')
+                   ,
+
+                TextInput::make('amount')->label('Betrag')->numeric()->required(),
             ]);
     }
 
@@ -38,10 +47,11 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('amount')->label('Betrag')->money('eur')->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->label('Erstellt am')
+                TextColumn::make('account.name')->label('Konto'),
+                TextColumn::make('amount')->label('Betrag')->money('eur')->sortable(),
+                TextColumn::make('created_at')->label('Erstellt am')
                     ->dateTime()->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')->label('Geändert am')
+                TextColumn::make('updated_at')->label('Geändert am')
                     ->dateTime()->sortable(),
             ])
             ->filters([
@@ -49,6 +59,7 @@ class BookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
