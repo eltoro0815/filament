@@ -10,8 +10,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
 
 class AccountResource extends Resource
 {
@@ -30,6 +29,8 @@ class AccountResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                    Forms\Components\Placeholder::make('Kontostand')
+                    ->content(fn($record) => number_format($record->bookings->sum('amount'), 2, ',', '.') . " EUR")
             ]);
     }
 
@@ -42,6 +43,8 @@ class AccountResource extends Resource
                     ->dateTime()->label('Erstellt am'),
                 Tables\Columns\TextColumn::make('updated_at')->label('Geändert am')
                     ->dateTime(),
+
+                    TextColumn::make('bookings_sum_amount')->sum('bookings', 'amount')->label('Kontostand')->money('eur'),
             ])
             ->filters([
                 //
