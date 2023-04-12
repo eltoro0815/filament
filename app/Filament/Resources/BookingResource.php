@@ -47,7 +47,7 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('account.name')->label('Konto'),
+                TextColumn::make('account.name')->label('Konto')->sortable(),
                 TextColumn::make('amount')->label('Betrag')->money('eur')->sortable(),
                 TextColumn::make('created_at')->label('Erstellt am')
                     ->dateTime()->sortable(),
