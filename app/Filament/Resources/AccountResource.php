@@ -6,6 +6,7 @@ use App\Filament\Resources\AccountResource\Pages;
 use App\Filament\Resources\AccountResource\RelationManagers;
 use App\Models\Account;
 use Filament\Forms;
+use Filament\Forms\Components\ViewField;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -29,8 +30,11 @@ class AccountResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                    Forms\Components\Placeholder::make('Kontostand')
-                    ->content(fn($record) => number_format($record->bookings->sum('amount'), 2, ',', '.') . " EUR")
+                ViewField::make('Konstostand')->view('filament.kontostand')->hidden(true),
+                Forms\Components\Placeholder::make('Kontostand')
+                    ->content(fn ($record) => number_format($record->bookings->sum('amount'), 2, ',', '.') . " EUR")->extraAttributes(['class' => 'text-2xl']),
+
+
             ]);
     }
 
@@ -44,7 +48,7 @@ class AccountResource extends Resource
                 Tables\Columns\TextColumn::make('updated_at')->label('Geändert am')
                     ->dateTime(),
 
-                    TextColumn::make('bookings_sum_amount')->sum('bookings', 'amount')->label('Kontostand')->money('eur'),
+                TextColumn::make('bookings_sum_amount')->sum('bookings', 'amount')->label('Kontostand')->money('eur'),
             ])
             ->filters([
                 //
